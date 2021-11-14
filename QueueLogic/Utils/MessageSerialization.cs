@@ -6,16 +6,21 @@ namespace PhotoBank.QueueLogic.Utils
 {
     public static class MessageSerialization
     {
-        public static ReadOnlyMemory<byte> ToBytes(Message message)
+        public static ReadOnlyMemory<byte> ToBytesReadOnlyMemory(Message message)
         {
-            return BinarySerialization.ToBytes(message);
+            return BinarySerialization.ToBytesReadOnlyMemory(message);
         }
 
-        public static Message FromBytes(string messageTypeName, ReadOnlyMemory<byte> bytes)
+        public static byte[] ToBytesArray(Message message)
+        {
+            return BinarySerialization.ToBytesArray(message);
+        }
+
+        public static Message FromBytes(ReadOnlyMemory<byte> bytes)
         {
             try
             {
-                return (Message)BinarySerialization.FromBytes(messageTypeName, bytes);
+                return (Message)BinarySerialization.FromBytes(bytes);
             }
             catch (SerializationException e)
             {

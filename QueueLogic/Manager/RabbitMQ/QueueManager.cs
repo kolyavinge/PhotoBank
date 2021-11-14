@@ -11,14 +11,14 @@ namespace PhotoBank.QueueLogic.Manager.RabbitMQ
     public class QueueManager : IQueueManager
     {
         private readonly object _lockObject = new object();
-        private readonly ConnectionFactory _connectionFactory;
-        private readonly IConnection _connection;
-        private readonly IModel _model;
-        private readonly ConcurrentDictionary<string, MessageConsumer> _consumers;
+        private ConnectionFactory _connectionFactory;
+        private IConnection _connection;
+        private IModel _model;
+        private ConcurrentDictionary<string, MessageConsumer> _consumers;
 
         public ILogger Logger { get; set; }
 
-        public QueueManager()
+        public void Init(QueueManagerContext context)
         {
             _connectionFactory = QueueConnectionFactory.MakeConnectionFactory();
             _connection = _connectionFactory.TryCreateConnection();
@@ -32,7 +32,7 @@ namespace PhotoBank.QueueLogic.Manager.RabbitMQ
             props.Headers = MessageFactory.GetPropertiesHeaders(message);
             lock (_lockObject)
             {
-                _model.BasicPublish("", queueName, props, MessageSerialization.ToBytes(message));
+                _model.BasicPublish("", queueName, props, MessageSerialization.ToBytesReadOnlyMemory(message));
             }
         }
 
@@ -81,8 +81,7 @@ namespace PhotoBank.QueueLogic.Manager.RabbitMQ
 
         public static Message MakeMessage(IBasicProperties prop, ReadOnlyMemory<byte> body)
         {
-            var messageTypeName = prop.GetHeaderValue(MessageFieldConstants.MessageType);
-            var message = MessageSerialization.FromBytes(messageTypeName, body);
+            var message = MessageSerialization.FromBytes(body);
             return message;
         }
     }

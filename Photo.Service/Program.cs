@@ -23,6 +23,7 @@ namespace PhotoBank.Photo.Service
             {
                 var queueManagerFactory = new QueueManagerFactory();
                 var queueManager = queueManagerFactory.Make();
+                queueManager.Init(new QueueManagerContext { ClientPort = 55557 });
                 services.AddSingleton(typeof(IQueueManager), queueManager);
 
                 PhotoSettings.RootPhotoPath = hostContext.Configuration["rootPhotoPath"];

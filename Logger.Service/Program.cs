@@ -21,6 +21,7 @@ namespace Logger.Service
                 {
                     var queueManagerFactory = new QueueManagerFactory();
                     var queueManager = queueManagerFactory.Make();
+                    queueManager.Init(new QueueManagerContext { ClientPort = 55559 });
                     services.AddSingleton(typeof(IQueueManager), queueManager);
 
                     var connectionString = hostContext.Configuration["connectionString"];

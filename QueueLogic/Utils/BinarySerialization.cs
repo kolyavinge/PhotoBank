@@ -6,7 +6,7 @@ namespace PhotoBank.QueueLogic.Utils
 {
     public static class BinarySerialization
     {
-        public static ReadOnlyMemory<byte> ToBytes(object instance)
+        public static ReadOnlyMemory<byte> ToBytesReadOnlyMemory(object instance)
         {
             var formatter = new BinaryFormatter();
             using (var memoryStream = new MemoryStream())
@@ -16,20 +16,25 @@ namespace PhotoBank.QueueLogic.Utils
             }
         }
 
-        public static object FromBytes(Type type, ReadOnlyMemory<byte> bytes)
+        public static byte[] ToBytesArray(object instance)
+        {
+            var formatter = new BinaryFormatter();
+            using (var memoryStream = new MemoryStream())
+            {
+                formatter.Serialize(memoryStream, instance);
+                return memoryStream.ToArray();
+            }
+        }
+
+        public static object FromBytes(ReadOnlyMemory<byte> bytes)
         {
             var formatter = new BinaryFormatter();
             using (var memoryStream = new MemoryStream(bytes.ToArray()))
             {
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var instance = formatter.Deserialize(memoryStream);
-                return Convert.ChangeType(instance, type);
+                return instance;
             }
-        }
-
-        public static object FromBytes(string typeName, ReadOnlyMemory<byte> bytes)
-        {
-            return FromBytes(Type.GetType(typeName), bytes);
         }
     }
 }

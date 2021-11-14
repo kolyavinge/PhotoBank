@@ -23,6 +23,7 @@ namespace PhotoBank.Auth.Service
             {
                 var queueManagerFactory = new QueueManagerFactory();
                 var queueManager = queueManagerFactory.Make();
+                queueManager.Init(new QueueManagerContext { ClientPort = 55558 });
                 services.AddSingleton(typeof(IQueueManager), queueManager);
 
                 AuthSettings.RootUserPictures = hostContext.Configuration["rootUserPictures"];

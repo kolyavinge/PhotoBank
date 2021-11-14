@@ -27,6 +27,7 @@ namespace PhotoBank.Broker.Api
             services.AddSingleton(typeof(IAuthenticationManager), typeof(AuthenticationManager));
             var queueManagerFactory = new QueueManagerFactory();
             var queueManager = queueManagerFactory.Make();
+            queueManager.Init(new QueueManagerContext { ClientPort = 55556 });
             services.AddSingleton(typeof(IQueueManager), queueManager);
             services.AddSingleton(typeof(IMessageLogger), new MessageLogger(queueManager, Host));
             BrokerNotifier.Instance.Init(queueManager);

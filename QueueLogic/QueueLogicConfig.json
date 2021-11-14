@@ -7,5 +7,6 @@
         "**/obj",
         "**/platforms"
     ],
-    "queueManagerTypeName": "PhotoBank.QueueLogic.Manager.RabbitMQ.QueueManager"
+    //"queueManagerTypeName": "PhotoBank.QueueLogic.Manager.RabbitMQ.QueueManager",
+    "queueManagerTypeName": "PhotoBank.QueueLogic.Manager.RatMQ.QueueManager"
 }
